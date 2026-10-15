@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  password  String
+  name      String
+  role      String   @default("ADMIN")
+  posts     Post[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Category {
+  id            Int        @id @default(autoincrement())
+  name          String
+  slug          String     @unique
+  description   String?    @db.Text
+  parentId      Int?
+  parent        Category?  @relation("SubCategories", fields: [parentId], references: [id], onDelete: SetNull)
+  subcategories Category[] @relation("SubCategories")
+  order         Int        @default(0)
+  posts         Post[]
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+
+  @@index([parentId])
+  @@map("categories")
+}
+
+model Post {
+  id              Int       @id @default(autoincrement())
+  title           String    @db.VarChar(500)
+  slug            String    @unique @db.VarChar(500)
+  excerpt         String    @db.Text
+  content         String    @db.LongText
+  featuredImage   String?   @db.VarChar(1000)
+  authorId        Int?
+  author          User?     @relation(fields: [authorId], references: [id], onDelete: SetNull)
+  categoryId      Int
+  category        Category  @relation(fields: [categoryId], references: [id])
+  status          String    @default("DRAFT") // DRAFT, PUBLISHED, ARCHIVED
+  isHero          Boolean   @default(false)  // Center column hero placement
+  isTrending      Boolean   @default(false)  // Left column or trending highlights
+  isLive          Boolean   @default(false)  // Live reporting badge
+  views           Int       @default(0)
+  metaTitle       String?   @db.VarChar(300)
+  metaDescription String?   @db.Text
+  tags            PostTag[]
+  publishedAt     DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([categoryId])
+  @@index([authorId])
+  @@index([status])
+  @@index([isHero])
+  @@index([isTrending])
+  @@map("posts")
+}
+
+model Tag {
+  id        Int       @id @default(autoincrement())
+  name      String    @unique @db.VarChar(100)
+  slug      String    @unique @db.VarChar(100)
+  posts     PostTag[]
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@map("tags")
+}
+
+model PostTag {
+  postId Int
+  tagId  Int
+  post   Post @relation(fields: [postId], references: [id], onDelete: Cascade)
+  tag    Tag  @relation(fields: [tagId], references: [id], onDelete: Cascade)
+
+  @@id([postId, tagId])
+  @@index([tagId])
+  @@map("post_tags")
+}
+
+model AdSlot {
+  id          Int      @id @default(autoincrement())
+  slotKey     String   @unique @db.VarChar(100) // e.g. "SIDEBAR_TOP", "SIDEBAR_CAROUSEL", "BANNER_HEADER"
+  title       String   @db.VarChar(200)
+  adCode      String?  @db.Text // Custom Google AdSense script or HTML embed
+  imageUrl    String?  @db.VarChar(1000) // For direct banner/affiliate campaigns
+  targetUrl   String?  @db.VarChar(1000)
+  buttonText  String?  @db.VarChar(100)
+  priceLabel  String?  @db.VarChar(100)
+  isActive    Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("ad_slots")
+}
+
+model InTheNewsItem {
+  id        Int      @id @default(autoincrement())
+  title     String   @db.VarChar(255)
+  linkUrl   String   @default("#") @db.VarChar(500)
+  order     Int      @default(0)
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("in_the_news_items")
+}
