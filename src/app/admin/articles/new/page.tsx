@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft, Save, Sparkles, Image as ImageIcon } from "lucide-react";
+import { ArrowLeft, Save, Sparkles, Upload, Search, Globe } from "lucide-react";
+import RichArticleEditor from "@/components/admin/RichArticleEditor";
 
 export default function NewArticlePage() {
   const router = useRouter();
@@ -14,21 +15,49 @@ export default function NewArticlePage() {
   const [featuredImage, setFeaturedImage] = useState("");
   const [categoryId, setCategoryId] = useState("1");
   const [tags, setTags] = useState("");
+  const [metaTitle, setMetaTitle] = useState("");
+  const [metaDescription, setMetaDescription] = useState("");
   const [isHero, setIsHero] = useState(false);
   const [isTrending, setIsTrending] = useState(false);
   const [isLive, setIsLive] = useState(false);
   const [status, setStatus] = useState("PUBLISHED");
   const [submitting, setSubmitting] = useState(false);
+  const [uploadingImage, setUploadingImage] = useState(false);
   const [error, setError] = useState("");
+  const [categories, setCategories] = useState<any[]>([]);
 
-  const categories = [
-    { id: 1, name: "Tech & Innovation" },
-    { id: 2, name: "Travel Guide" },
-    { id: 3, name: "Learning Portal" },
-    { id: 4, name: "Personal Blog" },
-    { id: 5, name: "Business & Markets" },
-    { id: 6, name: "World & India" },
-  ];
+  useEffect(() => {
+    fetch("/api/categories")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d.categories) setCategories(d.categories);
+      })
+      .catch(() => {});
+  }, []);
+
+  const handleFeaturedImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingImage(true);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+
+      const res = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "Upload failed");
+      setFeaturedImage(data.url);
+    } catch (err: any) {
+      alert(`Upload failed: ${err.message}`);
+    } finally {
+      setUploadingImage(false);
+    }
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,11 +75,13 @@ export default function NewArticlePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           title,
-          excerpt,
+          excerpt: excerpt || title.slice(0, 150),
           content,
           featuredImage,
           categoryId,
           tags,
+          metaTitle: metaTitle || title,
+          metaDescription: metaDescription || excerpt,
           isHero,
           isTrending,
           isLive,
@@ -71,6 +102,13 @@ export default function NewArticlePage() {
     }
   };
 
+  // Google SERP preview data
+  const seoPreviewTitle = metaTitle || title || "Article Headline — EveryGyan";
+  const seoPreviewDesc =
+    metaDescription ||
+    excerpt ||
+    "Read comprehensive editorial journalism, travel guides, and engineering tutorials on EveryGyan.";
+
   return (
     <div className="max-w-4xl mx-auto py-6 space-y-6">
       
@@ -84,9 +122,12 @@ export default function NewArticlePage() {
           <span>Back to Console</span>
         </Link>
         <div className="flex items-center gap-2">
-          <span className="text-xs bg-gray-100 text-gray-700 px-2.5 py-1 rounded font-mono">
-            Status: {status}
-          </span>
+          <Link
+            href="/admin/categories"
+            className="text-xs text-[#C7102E] hover:underline font-semibold"
+          >
+            Manage Categories →
+          </Link>
         </div>
       </div>
 
@@ -105,7 +146,7 @@ export default function NewArticlePage() {
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-6 bg-white border border-gray-200 p-6 rounded-lg shadow-xs">
+      <form onSubmit={handleSubmit} className="space-y-6 bg-white border border-gray-200 p-6 rounded-lg shadow-2xs">
         
         {/* Title */}
         <div>
@@ -116,7 +157,7 @@ export default function NewArticlePage() {
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            placeholder="e.g. Next-Gen Web Architecture: Scaling on Hostinger with Next.js & MySQL"
+            placeholder="e.g. Municipal enforcement drive: Authorities clear illegal structures in Punjab"
             className="w-full text-lg font-bold px-3 py-2.5 border border-gray-300 rounded focus:outline-none focus:border-[#C7102E]"
             required
           />
@@ -125,22 +166,60 @@ export default function NewArticlePage() {
         {/* Excerpt */}
         <div>
           <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
-            Excerpt / Teaser Summary
+            Excerpt / Lead Paragraph
           </label>
           <textarea
             value={excerpt}
             onChange={(e) => setExcerpt(e.target.value)}
             rows={2}
-            placeholder="A compelling 1-2 sentence lead paragraph shown on the front page card."
+            placeholder="A compelling 1-2 sentence lead summary shown on front page editorial cards."
             className="w-full text-xs px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#C7102E]"
           />
+        </div>
+
+        {/* Featured Image URL or Direct File Upload */}
+        <div className="space-y-2">
+          <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider">
+            Featured Hero Image
+          </label>
+          <div className="flex flex-col sm:flex-row gap-2">
+            <input
+              type="text"
+              value={featuredImage}
+              onChange={(e) => setFeaturedImage(e.target.value)}
+              placeholder="https://images.unsplash.com/... or upload below"
+              className="flex-1 text-xs px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#C7102E]"
+            />
+            <label className="cursor-pointer px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-semibold rounded flex items-center justify-center gap-1.5 transition shrink-0">
+              <Upload className="w-3.5 h-3.5 text-[#C7102E]" />
+              <span>{uploadingImage ? "Uploading..." : "Upload File"}</span>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleFeaturedImageUpload}
+                className="hidden"
+              />
+            </label>
+          </div>
+
+          {featuredImage && (
+            <div className="relative w-full h-48 rounded-md overflow-hidden bg-gray-100 border border-gray-200 mt-2">
+              <Image
+                src={featuredImage}
+                alt="Preview"
+                fill
+                className="object-cover"
+                unoptimized
+              />
+            </div>
+          )}
         </div>
 
         {/* Category & Placement Controls */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 border-t border-gray-100">
           <div>
             <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
-              Category
+              Category / Portal
             </label>
             <select
               value={categoryId}
@@ -163,13 +242,13 @@ export default function NewArticlePage() {
               type="text"
               value={tags}
               onChange={(e) => setTags(e.target.value)}
-              placeholder="Tech News, AI, FullStack, Travel"
+              placeholder="Tech News, Punjab, Enforcement, Governance"
               className="w-full text-xs px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#C7102E]"
             />
           </div>
         </div>
 
-        {/* Grid Placement Slots */}
+        {/* Homepage Grid Placement Selection */}
         <div className="bg-[#FBFBFC] border border-[#E5E5EB] p-4 rounded-md space-y-3">
           <span className="text-xs font-bold text-gray-900 uppercase tracking-wide block">
             Homepage Grid Slot Placement
@@ -213,46 +292,67 @@ export default function NewArticlePage() {
           </div>
         </div>
 
-        {/* Featured Image */}
-        <div>
-          <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
-            Featured Image URL
+        {/* Rich WYSIWYG & Markdown Content Editor */}
+        <div className="space-y-1.5">
+          <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider">
+            Article Content (Rich Formatted Editor) *
           </label>
-          <div className="flex gap-2">
-            <input
-              type="url"
-              value={featuredImage}
-              onChange={(e) => setFeaturedImage(e.target.value)}
-              placeholder="https://images.unsplash.com/photo-..."
-              className="flex-1 text-xs px-3 py-2 border border-gray-300 rounded focus:outline-none focus:border-[#C7102E]"
-            />
-          </div>
-          {featuredImage && (
-            <div className="mt-3 relative w-full h-44 rounded-md overflow-hidden bg-gray-100 border border-gray-200">
-              <Image
-                src={featuredImage}
-                alt="Preview"
-                fill
-                className="object-cover"
-                unoptimized
-              />
-            </div>
-          )}
+          <RichArticleEditor
+            content={content}
+            onChange={setContent}
+            onImageUploaded={(url) => {
+              if (!featuredImage) setFeaturedImage(url);
+            }}
+          />
         </div>
 
-        {/* Content Body */}
-        <div>
-          <label className="block text-xs font-bold text-gray-800 uppercase tracking-wider mb-1.5">
-            Article Content (Supports HTML / Rich Text) *
-          </label>
-          <textarea
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            rows={12}
-            placeholder="<p>Write your detailed article body here...</p><h2>Subheading</h2><p>Additional paragraphs and commentary...</p>"
-            className="w-full text-xs font-mono px-3 py-2.5 border border-gray-300 rounded focus:outline-none focus:border-[#C7102E]"
-            required
-          />
+        {/* SEO Meta Box & Live Google Search Snippet Preview */}
+        <div className="border border-gray-200 rounded-lg p-5 bg-[#FAFAFC] space-y-4">
+          <div className="flex items-center gap-2 text-xs font-bold text-gray-900 uppercase tracking-wide">
+            <Globe className="w-4 h-4 text-[#C7102E]" />
+            <span>SEO & Social Share Preview (Google SERP)</span>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <label className="block text-[11px] font-semibold text-gray-600 mb-1">
+                Custom Meta Title ({metaTitle.length}/60 chars)
+              </label>
+              <input
+                type="text"
+                value={metaTitle}
+                onChange={(e) => setMetaTitle(e.target.value)}
+                placeholder={title || "SEO optimized headline"}
+                className="w-full text-xs px-3 py-1.5 border border-gray-300 rounded focus:outline-none focus:border-[#C7102E] bg-white"
+              />
+            </div>
+
+            <div>
+              <label className="block text-[11px] font-semibold text-gray-600 mb-1">
+                Meta Description ({metaDescription.length}/160 chars)
+              </label>
+              <input
+                type="text"
+                value={metaDescription}
+                onChange={(e) => setMetaDescription(e.target.value)}
+                placeholder={excerpt || "Search engine summary..."}
+                className="w-full text-xs px-3 py-1.5 border border-gray-300 rounded focus:outline-none focus:border-[#C7102E] bg-white"
+              />
+            </div>
+          </div>
+
+          {/* Google Preview Widget */}
+          <div className="bg-white p-3.5 border border-gray-200 rounded text-xs space-y-1 shadow-2xs">
+            <div className="text-[11px] text-gray-500 font-mono">
+              https://everygyan.com &rsaquo; article &rsaquo; ...
+            </div>
+            <div className="text-sm font-semibold text-[#1a0dab] hover:underline cursor-pointer truncate">
+              {seoPreviewTitle}
+            </div>
+            <div className="text-xs text-[#4d5156] line-clamp-2 leading-relaxed">
+              {seoPreviewDesc}
+            </div>
+          </div>
         </div>
 
         {/* Publishing Actions */}

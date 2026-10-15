@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { PlusCircle, FileText, FolderKanban, LogOut, Eye, Flame, Radio } from "lucide-react";
+import { PlusCircle, FileText, FolderKanban, LogOut, Flame } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { getAdminSession } from "@/lib/auth";
 import { fallbackHeroPost, fallbackLeftStories } from "@/lib/data";
+import AdminArticleTable from "@/components/admin/AdminArticleTable";
 
 export default async function AdminDashboardPage() {
   const session = await getAdminSession();
@@ -12,12 +13,16 @@ export default async function AdminDashboardPage() {
   }
 
   let posts: any[] = [];
-  try {
-    posts = await prisma.post.findMany({
-      include: { category: true },
-      orderBy: { createdAt: "desc" },
-    });
-  } catch {
+  if (!process.env.DATABASE_URL?.includes("root:password@localhost:3306")) {
+    try {
+      posts = await prisma.post.findMany({
+        include: { category: true },
+        orderBy: { createdAt: "desc" },
+      });
+    } catch {}
+  }
+
+  if (posts.length === 0) {
     posts = [fallbackHeroPost, ...fallbackLeftStories];
   }
 
@@ -35,7 +40,15 @@ export default async function AdminDashboardPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex items-center flex-wrap gap-2.5">
+          <Link
+            href="/admin/categories"
+            className="flex items-center gap-1.5 border border-gray-300 hover:bg-gray-100 text-gray-700 px-3.5 py-2 rounded text-xs font-semibold transition"
+          >
+            <FolderKanban className="w-3.5 h-3.5 text-blue-600" />
+            <span>Category Manager</span>
+          </Link>
+
           <Link
             href="/admin/articles/new"
             className="flex items-center gap-2 bg-[#C7102E] hover:bg-[#9E0C24] text-white px-4 py-2 rounded text-xs font-bold transition shadow-sm"
@@ -43,6 +56,7 @@ export default async function AdminDashboardPage() {
             <PlusCircle className="w-4 h-4" />
             <span>Publish New Article</span>
           </Link>
+
           <form action="/api/auth/logout" method="POST">
             <button
               type="submit"
@@ -57,7 +71,7 @@ export default async function AdminDashboardPage() {
 
       {/* Metrics Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-        <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-xs">
+        <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-2xs">
           <div className="flex items-center justify-between text-gray-500 mb-2">
             <span className="text-xs font-bold uppercase tracking-wider">Total Articles</span>
             <FileText className="w-5 h-5 text-[#C7102E]" />
@@ -66,7 +80,7 @@ export default async function AdminDashboardPage() {
           <span className="text-[11px] text-gray-500">Live across all categories</span>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-xs">
+        <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-2xs">
           <div className="flex items-center justify-between text-gray-500 mb-2">
             <span className="text-xs font-bold uppercase tracking-wider">Layout Roles</span>
             <Flame className="w-5 h-5 text-amber-600" />
@@ -77,7 +91,7 @@ export default async function AdminDashboardPage() {
           <span className="text-[11px] text-gray-500">Center & Left slots filled</span>
         </div>
 
-        <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-xs">
+        <div className="bg-white border border-gray-200 rounded-lg p-5 shadow-2xs">
           <div className="flex items-center justify-between text-gray-500 mb-2">
             <span className="text-xs font-bold uppercase tracking-wider">Target Database</span>
             <FolderKanban className="w-5 h-5 text-blue-600" />
@@ -87,75 +101,8 @@ export default async function AdminDashboardPage() {
         </div>
       </div>
 
-      {/* Articles Management Table */}
-      <div className="bg-white border border-gray-200 rounded-lg overflow-hidden shadow-xs">
-        <div className="px-5 py-3.5 border-b border-gray-200 bg-gray-50 flex items-center justify-between">
-          <h2 className="text-sm font-bold text-gray-800">Published Dispatches & Articles</h2>
-          <span className="text-xs text-gray-500">{posts.length} articles</span>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="w-full text-left text-xs">
-            <thead className="bg-gray-100/80 uppercase text-[10px] text-gray-500 font-bold border-b border-gray-200">
-              <tr>
-                <th className="px-5 py-3">Headline</th>
-                <th className="px-5 py-3">Category</th>
-                <th className="px-5 py-3">Layout Role</th>
-                <th className="px-5 py-3">Status</th>
-                <th className="px-5 py-3 text-right">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-100">
-              {posts.map((post) => (
-                <tr key={post.id} className="hover:bg-gray-50 transition">
-                  <td className="px-5 py-3.5 font-bold text-gray-900 max-w-md truncate">
-                    {post.title}
-                  </td>
-                  <td className="px-5 py-3.5 text-gray-600">
-                    <span className="bg-gray-100 text-gray-800 px-2 py-0.5 rounded text-[11px] font-medium">
-                      {post.category?.name || "General"}
-                    </span>
-                  </td>
-                  <td className="px-5 py-3.5">
-                    {post.isHero && (
-                      <span className="bg-red-100 text-[#C7102E] px-2 py-0.5 rounded font-bold text-[10px]">
-                        ★ HERO (Center)
-                      </span>
-                    )}
-                    {post.isTrending && (
-                      <span className="bg-amber-100 text-amber-800 px-2 py-0.5 rounded font-bold text-[10px]">
-                        TRENDING (Left)
-                      </span>
-                    )}
-                    {post.isLive && (
-                      <span className="bg-blue-100 text-blue-800 px-2 py-0.5 rounded font-bold text-[10px] flex items-center gap-1 w-fit">
-                        <Radio className="w-2.5 h-2.5 animate-pulse" />
-                        LIVE
-                      </span>
-                    )}
-                    {!post.isHero && !post.isTrending && !post.isLive && (
-                      <span className="text-gray-400 text-[11px]">Standard</span>
-                    )}
-                  </td>
-                  <td className="px-5 py-3.5">
-                    <span className="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-1.5"></span>
-                    <span className="text-gray-700 font-medium">{post.status || "PUBLISHED"}</span>
-                  </td>
-                  <td className="px-5 py-3.5 text-right">
-                    <Link
-                      href={`/article/${post.slug}`}
-                      className="inline-flex items-center gap-1 text-[#C7102E] hover:underline font-semibold"
-                    >
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>View</span>
-                    </Link>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      </div>
+      {/* Articles Management Table Component */}
+      <AdminArticleTable initialPosts={posts} />
 
     </div>
   );
