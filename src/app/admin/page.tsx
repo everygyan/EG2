@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
-import { PlusCircle, FileText, FolderKanban, LogOut, Flame } from "lucide-react";
+import { PlusCircle, FileText, FolderKanban, LogOut, Flame, DollarSign } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { getAdminSession } from "@/lib/auth";
 import { fallbackHeroPost, fallbackLeftStories } from "@/lib/data";
@@ -43,10 +43,18 @@ export default async function AdminDashboardPage() {
         <div className="flex items-center flex-wrap gap-2.5">
           <Link
             href="/admin/categories"
-            className="flex items-center gap-1.5 border border-gray-300 hover:bg-gray-100 text-gray-700 px-3.5 py-2 rounded text-xs font-semibold transition"
+            className="flex items-center gap-1.5 border border-gray-300 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded text-xs font-semibold transition"
           >
             <FolderKanban className="w-3.5 h-3.5 text-blue-600" />
             <span>Category Manager</span>
+          </Link>
+
+          <Link
+            href="/admin/ads"
+            className="flex items-center gap-1.5 border border-gray-300 hover:bg-gray-100 text-gray-700 px-3 py-2 rounded text-xs font-semibold transition"
+          >
+            <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
+            <span>Monetization & Ads</span>
           </Link>
 
           <Link

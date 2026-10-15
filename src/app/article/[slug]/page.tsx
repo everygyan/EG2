@@ -7,6 +7,7 @@ import prisma from "@/lib/prisma";
 import { fallbackHeroPost, fallbackLeftStories, fallbackSubHeroPost } from "@/lib/data";
 import RightSidebar from "@/components/magazine/RightSidebar";
 import ArticleInteractiveBar from "@/components/magazine/ArticleInteractiveBar";
+import { injectInArticleAds } from "@/lib/adInjector";
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -170,10 +171,10 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
             </div>
           )}
 
-          {/* Article Body */}
+          {/* Article Body with Dynamic Ad Injection */}
           <div
             className="prose prose-lg max-w-none text-[#222222] leading-relaxed space-y-4 pt-2 font-sans"
-            dangerouslySetInnerHTML={{ __html: article.content }}
+            dangerouslySetInnerHTML={{ __html: injectInArticleAds(article.content) }}
           />
 
           {/* Tags */}
