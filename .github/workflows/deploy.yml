@@ -1,0 +1,53 @@
+name: Production Build Verification & Hostinger Deploy
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify-and-build:
+    name: Build & Test Verification
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js Runtime
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - name: Install Project Dependencies
+        run: npm ci
+
+      - name: Generate Prisma Client
+        run: npx prisma generate
+
+      - name: Execute Next.js Production Build
+        run: npm run build
+        env:
+          DATABASE_URL: "mysql://mock:mock@localhost:3306/mock"
+          JWT_SECRET: "mock_ci_secret_for_production_verification"
+
+  deploy-to-hostinger:
+    name: Trigger Hostinger Auto-Deployment
+    needs: verify-and-build
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Ping Hostinger Deployment Webhook
+        env:
+          WEBHOOK_URL: ${{ secrets.HOSTINGER_DEPLOY_WEBHOOK }}
+        run: |
+          if [ -n "$WEBHOOK_URL" ]; then
+            echo "Triggering Hostinger Git Auto-Deploy Webhook..."
+            curl -X POST "$WEBHOOK_URL"
+            echo "Hostinger notified successfully!"
+          else
+            echo "HOSTINGER_DEPLOY_WEBHOOK secret not set. Skipping webhook trigger. (Hostinger Git auto-polling or manual pull can still be used)."
+          fi
