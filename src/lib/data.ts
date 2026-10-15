@@ -11,7 +11,8 @@ export const fallbackCategories: CategoryItem[] = [
       { id: 101, name: "AI & DeepTech", slug: "ai-deeptech" },
       { id: 102, name: "Gadgets Now", slug: "gadgets-now" },
       { id: 103, name: "Software & Dev", slug: "software-dev" },
-      { id: 104, name: "Startups", slug: "startups" },
+      { id: 104, name: "Cloud & DevOps", slug: "cloud-devops" },
+      { id: 105, name: "Startups & VC", slug: "startups" },
     ],
   },
   {
@@ -22,7 +23,8 @@ export const fallbackCategories: CategoryItem[] = [
       { id: 201, name: "Asia Expeditions", slug: "asia" },
       { id: 202, name: "Europe Escapes", slug: "europe" },
       { id: 203, name: "Budget Backpacking", slug: "budget-travel" },
-      { id: 204, name: "Itineraries", slug: "itineraries" },
+      { id: 204, name: "Visa & Flight Hacks", slug: "visa-guides" },
+      { id: 205, name: "Curated Itineraries", slug: "itineraries" },
     ],
   },
   {
@@ -31,9 +33,10 @@ export const fallbackCategories: CategoryItem[] = [
     slug: "learning",
     subcategories: [
       { id: 301, name: "Coding Masterclass", slug: "coding" },
-      { id: 302, name: "Career Growth", slug: "career" },
-      { id: 303, name: "Financial Literacy", slug: "finance" },
-      { id: 304, name: "Science & Research", slug: "science" },
+      { id: 302, name: "FullStack Next.js & React", slug: "fullstack" },
+      { id: 303, name: "AI Engineering & Agents", slug: "ai-engineering" },
+      { id: 304, name: "Financial Literacy & Investing", slug: "finance" },
+      { id: 305, name: "Career & Leadership", slug: "career" },
     ],
   },
   {
@@ -41,9 +44,10 @@ export const fallbackCategories: CategoryItem[] = [
     name: "Personal Blog",
     slug: "personal-blog",
     subcategories: [
-      { id: 401, name: "Reflections", slug: "reflections" },
-      { id: 402, name: "Productivity", slug: "productivity" },
-      { id: 403, name: "Book Notes", slug: "books" },
+      { id: 401, name: "Life Reflections", slug: "reflections" },
+      { id: 402, name: "Deep Work & Habits", slug: "productivity" },
+      { id: 403, name: "Book Summaries", slug: "books" },
+      { id: 404, name: "Tech Experiments", slug: "experiments" },
     ],
   },
   {
@@ -52,7 +56,109 @@ export const fallbackCategories: CategoryItem[] = [
     slug: "business",
     subcategories: [
       { id: 501, name: "Markets Pulse", slug: "markets" },
-      { id: 502, name: "Economy", slug: "economy" },
+      { id: 502, name: "Global Economy", slug: "economy" },
+      { id: 503, name: "Venture Capital", slug: "vc" },
+      { id: 504, name: "Real Estate & Infrastructure", slug: "real-estate" },
+    ],
+  },
+  {
+    id: 6,
+    name: "Videos",
+    slug: "videos",
+    subcategories: [
+      { id: 601, name: "Documentaries", slug: "documentaries" },
+      { id: 602, name: "Tech Teardowns", slug: "tech-teardowns" },
+      { id: 603, name: "Travel Vlogs", slug: "travel-vlogs" },
+    ],
+  },
+  {
+    id: 7,
+    name: "City",
+    slug: "city",
+    subcategories: [
+      { id: 701, name: "Delhi NCR", slug: "delhi" },
+      { id: 702, name: "Mumbai", slug: "mumbai" },
+      { id: 703, name: "Bengaluru", slug: "bengaluru" },
+      { id: 704, name: "Hyderabad", slug: "hyderabad" },
+    ],
+  },
+  {
+    id: 8,
+    name: "India",
+    slug: "india",
+    subcategories: [
+      { id: 801, name: "Governance & Law", slug: "governance" },
+      { id: 802, name: "Economic Reform", slug: "reforms" },
+      { id: 803, name: "Science & Space (ISRO)", slug: "isro" },
+    ],
+  },
+  {
+    id: 9,
+    name: "World",
+    slug: "world",
+    subcategories: [
+      { id: 901, name: "Americas", slug: "americas" },
+      { id: 902, name: "Europe & UK", slug: "europe-news" },
+      { id: 903, name: "Asia-Pacific", slug: "asia-pacific" },
+    ],
+  },
+  {
+    id: 10,
+    name: "Cricket",
+    slug: "cricket",
+    subcategories: [
+      { id: 1001, name: "IPL Coverage", slug: "ipl" },
+      { id: 1002, name: "Test Cricket", slug: "tests" },
+      { id: 1003, name: "Stats & Commentary", slug: "stats" },
+    ],
+  },
+  {
+    id: 11,
+    name: "Sports",
+    slug: "sports",
+    subcategories: [
+      { id: 1101, name: "Football / UCL", slug: "football" },
+      { id: 1102, name: "Formula 1", slug: "f1" },
+      { id: 1103, name: "Tennis", slug: "tennis" },
+    ],
+  },
+  {
+    id: 12,
+    name: "Entertainment",
+    slug: "entertainment",
+    subcategories: [
+      { id: 1201, name: "Film Reviews", slug: "film-reviews" },
+      { id: 1202, name: "OTT & Web Series", slug: "ott" },
+      { id: 1203, name: "Music & Culture", slug: "music" },
+    ],
+  },
+  {
+    id: 13,
+    name: "Auto",
+    slug: "auto",
+    subcategories: [
+      { id: 1301, name: "Electric Vehicles (EV)", slug: "ev" },
+      { id: 1302, name: "Supercars", slug: "supercars" },
+      { id: 1303, name: "Motorcycles", slug: "bikes" },
+    ],
+  },
+  {
+    id: 14,
+    name: "EveryGyan Women",
+    slug: "women",
+    subcategories: [
+      { id: 1401, name: "Leadership & Enterprise", slug: "leadership" },
+      { id: 1402, name: "Health & Wellbeing", slug: "wellness" },
+      { id: 1403, name: "Women in STEM", slug: "stem" },
+    ],
+  },
+  {
+    id: 15,
+    name: "TV",
+    slug: "tv",
+    subcategories: [
+      { id: 1501, name: "Primetime Shows", slug: "primetime" },
+      { id: 1502, name: "Special Reports", slug: "special-reports" },
     ],
   },
 ];
@@ -145,69 +251,85 @@ export const fallbackLeftStories: PostItem[] = [
   },
 ];
 
-export async function getCategoriesWithSubs(): Promise<CategoryItem[]> {
-  try {
-    const cats = await prisma.category.findMany({
-      where: { parentId: null },
-      include: {
-        subcategories: {
-          orderBy: { order: "asc" },
-        },
-      },
-      orderBy: { order: "asc" },
-    });
-    if (cats && cats.length > 0) {
-      return cats;
-    }
-  } catch (error) {
-    console.warn("Using fallback categories (DB not yet seeded or connected):", error);
+async function withDbTimeout<T>(fn: () => Promise<T>, fallback: T, timeoutMs = 800): Promise<T> {
+  // If default local placeholder is present and no local MySQL is listening, return fallback instantly
+  if (process.env.DATABASE_URL?.includes("root:password@localhost:3306")) {
+    return fallback;
   }
-  return fallbackCategories;
+  try {
+    const timer = new Promise<T>((_, reject) =>
+      setTimeout(() => reject(new Error("Database connection timeout")), timeoutMs)
+    );
+    const result = await Promise.race([fn(), timer]);
+    return result || fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+export async function getCategoriesWithSubs(): Promise<CategoryItem[]> {
+  return withDbTimeout(
+    async () => {
+      const cats = await prisma.category.findMany({
+        where: { parentId: null },
+        include: {
+          subcategories: {
+            orderBy: { order: "asc" },
+          },
+        },
+        orderBy: { order: "asc" },
+      });
+      return cats && cats.length > 0 ? cats : fallbackCategories;
+    },
+    fallbackCategories
+  );
 }
 
 export async function getInTheNews(): Promise<InTheNewsItemData[]> {
-  try {
-    const items = await prisma.inTheNewsItem.findMany({
-      where: { isActive: true },
-      orderBy: { order: "asc" },
-    });
-    if (items && items.length > 0) return items;
-  } catch (error) {
-    console.warn("Using fallback ticker items:", error);
-  }
-  return fallbackTickerItems;
+  return withDbTimeout(
+    async () => {
+      const items = await prisma.inTheNewsItem.findMany({
+        where: { isActive: true },
+        orderBy: { order: "asc" },
+      });
+      return items && items.length > 0 ? items : fallbackTickerItems;
+    },
+    fallbackTickerItems
+  );
 }
 
 export async function getEditorialFeed() {
-  try {
-    const hero = await prisma.post.findFirst({
-      where: { isHero: true, status: "PUBLISHED" },
-      include: { category: true, tags: { include: { tag: true } } },
-    });
-    const subHero = await prisma.post.findFirst({
-      where: { isLive: true, status: "PUBLISHED" },
-      include: { category: true, tags: { include: { tag: true } } },
-    });
-    const leftStories = await prisma.post.findMany({
-      where: { isTrending: true, status: "PUBLISHED" },
-      include: { category: true, tags: { include: { tag: true } } },
-      take: 6,
-    });
-
-    if (hero) {
-      return {
-        hero: hero as unknown as PostItem,
-        subHero: (subHero ?? fallbackSubHeroPost) as unknown as PostItem,
-        leftStories: (leftStories.length > 0 ? leftStories : fallbackLeftStories) as unknown as PostItem[],
-      };
-    }
-  } catch (error) {
-    console.warn("Using fallback editorial feed:", error);
-  }
-
-  return {
+  const defaultFeed = {
     hero: fallbackHeroPost,
     subHero: fallbackSubHeroPost,
     leftStories: fallbackLeftStories,
   };
+
+  return withDbTimeout(
+    async () => {
+      const hero = await prisma.post.findFirst({
+        where: { isHero: true, status: "PUBLISHED" },
+        include: { category: true, tags: { include: { tag: true } } },
+      });
+      const subHero = await prisma.post.findFirst({
+        where: { isLive: true, status: "PUBLISHED" },
+        include: { category: true, tags: { include: { tag: true } } },
+      });
+      const leftStories = await prisma.post.findMany({
+        where: { isTrending: true, status: "PUBLISHED" },
+        include: { category: true, tags: { include: { tag: true } } },
+        take: 6,
+      });
+
+      if (hero) {
+        return {
+          hero: hero as unknown as PostItem,
+          subHero: (subHero ?? fallbackSubHeroPost) as unknown as PostItem,
+          leftStories: (leftStories.length > 0 ? leftStories : fallbackLeftStories) as unknown as PostItem[],
+        };
+      }
+      return defaultFeed;
+    },
+    defaultFeed
+  );
 }

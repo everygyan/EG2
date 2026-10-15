@@ -18,19 +18,21 @@ export default async function CategoryPage({ params }: CategoryPageProps) {
   if (found) categoryName = found.name;
 
   let posts: any[] = [];
-  try {
-    posts = await prisma.post.findMany({
-      where: {
-        category: {
-          OR: [{ slug }, { parent: { slug } }],
+  if (!process.env.DATABASE_URL?.includes("root:password@localhost:3306")) {
+    try {
+      posts = await prisma.post.findMany({
+        where: {
+          category: {
+            OR: [{ slug }, { parent: { slug } }],
+          },
+          status: "PUBLISHED",
         },
-        status: "PUBLISHED",
-      },
-      include: { category: true, tags: { include: { tag: true } } },
-      orderBy: { createdAt: "desc" },
-    });
-  } catch (err) {
-    console.warn("DB query failed, fallback used:", err);
+        include: { category: true, tags: { include: { tag: true } } },
+        orderBy: { createdAt: "desc" },
+      });
+    } catch (err) {
+      console.warn("DB query failed, fallback used:", err);
+    }
   }
 
   if (posts.length === 0) {

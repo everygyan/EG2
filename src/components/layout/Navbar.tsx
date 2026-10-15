@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { Search, Menu, X, ChevronDown, Radio } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { Search, Menu, X, ChevronDown, Radio, Sparkles } from "lucide-react";
 import { CategoryItem } from "@/types";
 
 interface NavbarProps {
@@ -10,42 +11,55 @@ interface NavbarProps {
 }
 
 export default function Navbar({ categories }: NavbarProps) {
+  const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<number | null>(null);
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // Default nav items as requested + from the screenshot
+  // All category tabs matching the EveryGyan screenshot & user specifications
   const navTabs = [
     { label: "EveryGyan +", href: "/feed/plus", isSpecial: true },
+    { label: "Videos", href: "/category/videos", catSlug: "videos" },
+    { label: "City", href: "/category/city", catSlug: "city" },
+    { label: "India", href: "/category/india", catSlug: "india" },
+    { label: "World", href: "/category/world", catSlug: "world" },
+    { label: "Business", href: "/category/business", catSlug: "business" },
+    { label: "Tech", href: "/category/tech", catSlug: "tech" },
     { label: "Travel Guide", href: "/category/travel", catSlug: "travel" },
     { label: "Learning Portal", href: "/category/learning", catSlug: "learning" },
     { label: "Personal Blog", href: "/category/personal-blog", catSlug: "personal-blog" },
-    { label: "Tech", href: "/category/tech", catSlug: "tech" },
-    { label: "Business", href: "/category/business", catSlug: "business" },
-    { label: "Videos", href: "/category/videos" },
-    { label: "City", href: "/category/city" },
-    { label: "India", href: "/category/india" },
-    { label: "World", href: "/category/world" },
-    { label: "Cricket", href: "/category/cricket" },
-    { label: "Entertainment", href: "/category/entertainment" },
+    { label: "Gadgets Now", href: "/category/tech/gadgets-now" },
+    { label: "Cricket", href: "/category/cricket", catSlug: "cricket" },
+    { label: "Sports", href: "/category/sports", catSlug: "sports" },
+    { label: "Entertainment", href: "/category/entertainment", catSlug: "entertainment" },
+    { label: "Auto", href: "/category/auto", catSlug: "auto" },
+    { label: "EveryGyan Women", href: "/category/women", catSlug: "women" },
+    { label: "TV", href: "/category/tv", catSlug: "tv" },
     { label: "Live", href: "/live", isLive: true },
   ];
 
-  // Helper to find category subcategories
   const getSubcategories = (catSlug?: string) => {
     if (!catSlug) return [];
     const found = categories.find((c) => c.slug === catSlug);
     return found?.subcategories || [];
   };
 
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      router.push(`/search?q=${encodeURIComponent(searchQuery.trim())}`);
+      setSearchOpen(false);
+    }
+  };
+
   return (
-    <nav className="relative border-b border-[#E2E2E6] bg-white text-[13px] font-medium z-30">
+    <nav className="sticky top-0 z-40 bg-white/95 backdrop-blur-sm border-b border-[#E2E2E6] text-[13px] font-medium shadow-2xs">
       <div className="max-w-[1340px] mx-auto px-4 sm:px-6">
         <div className="flex items-center justify-between">
           
-          {/* Main Navigation Links */}
-          <div className="flex items-center space-x-1 sm:space-x-2 overflow-x-auto no-scrollbar py-2.5">
+          {/* Main Navigation Horizontal Scroll List */}
+          <div className="flex items-center space-x-0.5 sm:space-x-1.5 overflow-x-auto no-scrollbar py-2">
             {navTabs.map((item, idx) => {
               const subs = getSubcategories(item.catSlug);
               const hasDropdown = subs.length > 0;
@@ -69,7 +83,7 @@ export default function Navbar({ categories }: NavbarProps) {
                     href={item.href}
                     className="whitespace-nowrap flex items-center gap-1.5 px-2.5 py-1 text-black font-semibold hover:text-[#C7102E] transition"
                   >
-                    <span className="w-2 h-2 rounded-full bg-[#C7102E] animate-pulse"></span>
+                    <span className="w-2 h-2 rounded-full bg-[#C7102E] animate-ping"></span>
                     <Radio className="w-3.5 h-3.5 text-[#C7102E]" />
                     <span>Live</span>
                   </Link>
@@ -85,19 +99,20 @@ export default function Navbar({ categories }: NavbarProps) {
                 >
                   <Link
                     href={item.href}
-                    className="whitespace-nowrap flex items-center gap-1 px-2.5 py-1 text-[#222222] hover:text-[#C7102E] transition"
+                    className="whitespace-nowrap flex items-center gap-1 px-2.5 py-1 text-[#222222] hover:text-[#C7102E] transition rounded hover:bg-gray-50"
                   >
                     <span>{item.label}</span>
                     {hasDropdown && (
-                      <ChevronDown className="w-3 h-3 text-[#888888] group-hover:rotate-180 transition-transform duration-200" />
+                      <ChevronDown className="w-3 h-3 text-[#888888] group-hover:text-[#C7102E] group-hover:rotate-180 transition-transform duration-200" />
                     )}
                   </Link>
 
                   {/* Dropdown Menu */}
                   {hasDropdown && activeDropdown === idx && (
-                    <div className="absolute left-0 top-full pt-1 w-52 shadow-xl bg-white border border-[#E2E2E6] rounded-sm py-2 z-50">
-                      <div className="px-3 py-1 text-[11px] font-bold uppercase text-[#888888] border-b border-[#F0F0F2] mb-1">
-                        Explore {item.label}
+                    <div className="absolute left-0 top-full pt-1.5 w-60 shadow-2xl bg-white border border-[#E2E2E6] rounded-md py-2 z-50 animate-in fade-in duration-150">
+                      <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#888888] border-b border-[#F0F0F2] mb-1 flex items-center justify-between">
+                        <span>{item.label} Portals</span>
+                        <Sparkles className="w-3 h-3 text-[#C7102E]" />
                       </div>
                       {subs.map((sub) => (
                         <Link
@@ -116,7 +131,7 @@ export default function Navbar({ categories }: NavbarProps) {
           </div>
 
           {/* Action Icons (Search & Menu) */}
-          <div className="flex items-center space-x-2 pl-3 border-l border-[#E2E2E6] my-2">
+          <div className="flex items-center space-x-1.5 pl-3 border-l border-[#E2E2E6] my-2 shrink-0">
             <button
               onClick={() => setSearchOpen(!searchOpen)}
               aria-label="Search"
@@ -137,36 +152,44 @@ export default function Navbar({ categories }: NavbarProps) {
 
         {/* Search Bar Input Reveal */}
         {searchOpen && (
-          <div className="py-2.5 border-t border-[#F0F0F2] flex items-center gap-2">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search EveryGyan articles, travel guides, tech reviews..."
-              className="w-full text-sm px-3 py-1.5 border border-[#CCCCCC] rounded-sm focus:outline-none focus:border-[#C7102E]"
-            />
+          <form onSubmit={handleSearchSubmit} className="py-2.5 border-t border-[#F0F0F2] flex items-center gap-2">
+            <div className="relative flex-1">
+              <Search className="w-4 h-4 text-gray-400 absolute left-3 top-2.5" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search EveryGyan articles, travel guides, tech reviews, learning tutorials..."
+                className="w-full text-xs pl-9 pr-3 py-2 border border-[#CCCCCC] rounded focus:outline-none focus:border-[#C7102E]"
+                autoFocus
+              />
+            </div>
             <button
-              onClick={() => {
-                if (searchQuery.trim()) {
-                  window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
-                }
-              }}
-              className="px-4 py-1.5 bg-[#C7102E] text-white text-xs font-semibold rounded-sm hover:bg-[#9E0C24] transition"
+              type="submit"
+              className="px-4 py-2 bg-[#C7102E] hover:bg-[#9E0C24] text-white text-xs font-semibold rounded transition"
             >
               Search
             </button>
-          </div>
+            <button
+              type="button"
+              onClick={() => setSearchOpen(false)}
+              className="p-2 text-gray-500 hover:text-black"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </form>
         )}
 
         {/* Mobile Full Navigation Drawer */}
         {mobileMenuOpen && (
-          <div className="fixed inset-x-0 top-[112px] bottom-0 bg-white z-40 overflow-y-auto p-6 border-t border-[#E2E2E6] shadow-2xl">
+          <div className="fixed inset-x-0 top-[110px] bottom-0 bg-white z-40 overflow-y-auto p-6 border-t border-[#E2E2E6] shadow-2xl">
             <div className="max-w-[800px] mx-auto space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E2E6]">
                 <h3 className="font-bold text-lg font-serif">All Sections & Portals</h3>
                 <Link
                   href="/admin"
-                  className="text-xs bg-gray-900 text-white px-3 py-1 rounded hover:bg-black font-semibold"
+                  className="text-xs bg-gray-900 text-white px-3 py-1.5 rounded hover:bg-black font-semibold"
+                  onClick={() => setMobileMenuOpen(false)}
                 >
                   Admin CMS Portal →
                 </Link>

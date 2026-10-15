@@ -1,9 +1,10 @@
 import Link from "next/link";
 import { ArrowUpRight } from "lucide-react";
+import MarketPulseWidget from "./MarketPulseWidget";
 
 export default function Header() {
   return (
-    <header className="border-b border-[#E2E2E6] bg-white pt-3 pb-4">
+    <header className="border-b border-[#E2E2E6] bg-white pt-3.5 pb-4">
       <div className="max-w-[1340px] mx-auto px-4 sm:px-6">
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
           
@@ -22,18 +23,8 @@ export default function Header() {
 
           {/* Top Right Market / Spotlight Tickers */}
           <div className="flex items-center gap-6 self-start md:self-center text-xs">
-            {/* Markets Pulse */}
-            <div className="flex flex-col border-r border-[#E2E2E6] pr-6">
-              <span className="text-[10px] tracking-wider uppercase font-semibold text-[#777777]">
-                MARKETS PULSE
-              </span>
-              <div className="flex items-center gap-1.5 font-bold text-[#111111]">
-                <span>Nifty 50</span>
-                <span className="text-emerald-600 flex items-center font-semibold">
-                  +0.68% ▲
-                </span>
-              </div>
-            </div>
+            {/* Dynamic Market Pulse Widget */}
+            <MarketPulseWidget />
 
             {/* Gyan Spotlight */}
             <Link
