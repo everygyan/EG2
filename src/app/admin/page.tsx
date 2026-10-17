@@ -5,6 +5,7 @@ import prisma from "@/lib/prisma";
 import { getAdminSession } from "@/lib/auth";
 import { fallbackHeroPost, fallbackLeftStories } from "@/lib/data";
 import AdminArticleTable from "@/components/admin/AdminArticleTable";
+import DatabaseInitButton from "@/components/admin/DatabaseInitButton";
 
 export default async function AdminDashboardPage() {
   const session = await getAdminSession();
@@ -56,6 +57,8 @@ export default async function AdminDashboardPage() {
             <DollarSign className="w-3.5 h-3.5 text-emerald-600" />
             <span>Monetization & Ads</span>
           </Link>
+
+          <DatabaseInitButton />
 
           <Link
             href="/admin/articles/new"
