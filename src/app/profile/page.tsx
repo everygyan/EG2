@@ -418,13 +418,16 @@ export default function ProfilePage() {
             </h3>
             <div className="flex flex-col gap-2 text-xs">
               <Link href="/category/tech" className="text-gray-700 hover:text-[#C7102E] font-medium transition">
-                &bull; Tech & Innovation
+                &bull; Tech & Learning Hub
+              </Link>
+              <Link href="/category/personal-blog" className="text-gray-700 hover:text-[#C7102E] font-medium transition">
+                &bull; Personal Blog & Essays
               </Link>
               <Link href="/category/travel" className="text-gray-700 hover:text-[#C7102E] font-medium transition">
-                &bull; Travel Guides & Experiences
+                &bull; Travel Diaries
               </Link>
-              <Link href="/category/learning" className="text-gray-700 hover:text-[#C7102E] font-medium transition">
-                &bull; Learning & Academic Portal
+              <Link href="/category/health" className="text-gray-700 hover:text-[#C7102E] font-medium transition">
+                &bull; Health & Wellness
               </Link>
               <Link href="/feed/plus" className="text-[#C7102E] font-bold transition">
                 &bull; EveryGyan + Premium

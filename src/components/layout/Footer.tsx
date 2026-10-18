@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { UNIFIED_PILLARS, FOOTER_SPECIALS, FOOTER_USER_LINKS } from "@/lib/constants/navigation";
 
 export default function Footer() {
   return (
@@ -7,54 +8,71 @@ export default function Footer() {
         
         {/* Top Footer Grid */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+          
+          {/* Column 1: Core Knowledge Pillars */}
           <div>
             <h4 className="text-[#C7102E] font-bold uppercase tracking-wider text-xs mb-3">
-              Editorial Sections
+              Knowledge Desks
             </h4>
             <ul className="space-y-2 text-[#AAAAAA]">
-              <li><Link href="/category/tech" className="hover:text-white transition">Tech & Innovation</Link></li>
-              <li><Link href="/category/travel" className="hover:text-white transition">Travel Guides</Link></li>
-              <li><Link href="/category/learning" className="hover:text-white transition">Learning Portal</Link></li>
-              <li><Link href="/category/personal-blog" className="hover:text-white transition">Personal Blog</Link></li>
-              <li><Link href="/category/business" className="hover:text-white transition">Business & Markets</Link></li>
+              {UNIFIED_PILLARS.map((pillar) => (
+                <li key={pillar.id}>
+                  <Link
+                    href={pillar.href}
+                    className="hover:text-white transition"
+                  >
+                    {pillar.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
+          {/* Column 2: Special Coverage & Feeds */}
           <div>
             <h4 className="text-[#C7102E] font-bold uppercase tracking-wider text-xs mb-3">
               Special Coverage
             </h4>
             <ul className="space-y-2 text-[#AAAAAA]">
-              <li><Link href="/feed/plus" className="hover:text-white transition">EveryGyan +</Link></li>
-              <li><Link href="/live" className="hover:text-white transition">Live Coverage</Link></li>
-              <li><Link href="/category/videos" className="hover:text-white transition">Video Documentaries</Link></li>
-              <li><Link href="/masterclass" className="hover:text-white transition">Young Leaders Masterclass</Link></li>
+              {FOOTER_SPECIALS.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="hover:text-white transition">
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
+          {/* Column 3: Member & Admin Services */}
           <div>
             <h4 className="text-[#C7102E] font-bold uppercase tracking-wider text-xs mb-3">
-              Admin & Publisher
+              Account & Publishing
             </h4>
             <ul className="space-y-2 text-[#AAAAAA]">
-              <li><Link href="/login" className="hover:text-white transition font-semibold text-gray-300">Reader Sign In / Register</Link></li>
-              <li><Link href="/profile" className="hover:text-white transition">Member Account Profile</Link></li>
-              <li><Link href="/admin" className="hover:text-white transition">Admin CMS Portal</Link></li>
-              <li><Link href="/sitemap.xml" className="hover:text-white transition">XML Sitemap</Link></li>
+              {FOOTER_USER_LINKS.map((item) => (
+                <li key={item.name}>
+                  <Link href={item.href} className="hover:text-white transition font-medium text-gray-300">
+                    {item.name}
+                  </Link>
+                </li>
+              ))}
             </ul>
           </div>
 
+          {/* Column 4: About EveryGyan */}
           <div>
             <h4 className="text-[#C7102E] font-bold uppercase tracking-wider text-xs mb-3">
               About EveryGyan
             </h4>
             <p className="text-[#AAAAAA] leading-relaxed mb-3">
-              A high-impact personal portal dedicated to journalism, global perspectives, hands-on engineering tutorials, and travel memoirs.
+              A high-impact publication dedicated to deep tech engineering, personal essays, global travel memoirs, and evidence-based wellness.
             </p>
             <div className="text-[11px] text-[#777777]">
               Hosted with ⚡ LiteSpeed on Hostinger Business
             </div>
           </div>
+
         </div>
 
         {/* Bottom Copyright */}

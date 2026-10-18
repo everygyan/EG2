@@ -9,13 +9,22 @@ function FeedFilterContent() {
   const searchParams = useSearchParams();
   const activeFeed = searchParams.get("feed") || "Plus";
 
-  const feeds = ["Plus", "Top Stories", "Tech", "Travel", "Learning"];
+  const feeds = [
+    { label: "Plus", key: "Plus" },
+    { label: "Top Stories", key: "Top Stories" },
+    { label: "Tech & Learning", key: "tech" },
+    { label: "Personal Blog", key: "personal-blog" },
+    { label: "Travel Diaries", key: "travel" },
+    { label: "Health & Wellness", key: "health" },
+    { label: "Business", key: "business" },
+    { label: "Sports", key: "sports" },
+  ];
 
-  const handleFeedSelect = (feed: string) => {
-    if (feed === "Top Stories") {
+  const handleFeedSelect = (key: string) => {
+    if (key === "Top Stories") {
       router.push("/");
     } else {
-      router.push(`/?feed=${encodeURIComponent(feed)}`);
+      router.push(`/?feed=${encodeURIComponent(key)}`);
     }
   };
 
@@ -36,15 +45,16 @@ function FeedFilterContent() {
           <div className="flex items-center gap-1.5">
             {feeds.map((f) => (
               <button
-                key={f}
-                onClick={() => handleFeedSelect(f)}
+                key={f.key}
+                onClick={() => handleFeedSelect(f.key)}
                 className={`px-2.5 py-0.5 rounded text-xs font-semibold whitespace-nowrap transition ${
-                  activeFeed.toLowerCase() === f.toLowerCase()
+                  activeFeed.toLowerCase() === f.key.toLowerCase() ||
+                  activeFeed.toLowerCase() === f.label.toLowerCase()
                     ? "bg-[#C7102E] text-white shadow-xs"
                     : "bg-white border border-[#E0E0E4] text-[#444444] hover:bg-gray-100"
                 }`}
               >
-                {f}
+                {f.label}
               </button>
             ))}
           </div>
@@ -67,18 +77,20 @@ function FeedFilterContent() {
 
 export default function FeedFilterBar() {
   return (
-    <Suspense fallback={
-      <div className="border-b border-[#F0F0F3] bg-[#FAFAFC] py-2 text-xs">
-        <div className="max-w-[1340px] mx-auto px-4 sm:px-6 flex items-center gap-2">
-          <span className="font-bold text-[11px] uppercase tracking-wider text-[#C7102E]">
-            SHOWING FEED:
-          </span>
-          <span className="bg-white border border-[#E0E0E4] px-2.5 py-0.5 rounded text-xs font-semibold">
-            Plus
-          </span>
+    <Suspense
+      fallback={
+        <div className="border-b border-[#F0F0F3] bg-[#FAFAFC] py-2 text-xs">
+          <div className="max-w-[1340px] mx-auto px-4 sm:px-6 flex items-center gap-2">
+            <span className="font-bold text-[11px] uppercase tracking-wider text-[#C7102E]">
+              SHOWING FEED:
+            </span>
+            <span className="bg-white border border-[#E0E0E4] px-2.5 py-0.5 rounded text-xs font-semibold">
+              Plus
+            </span>
+          </div>
         </div>
-      </div>
-    }>
+      }
+    >
       <FeedFilterContent />
     </Suspense>
   );

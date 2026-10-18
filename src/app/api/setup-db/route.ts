@@ -133,97 +133,55 @@ export async function GET(req: Request) {
       },
     });
 
-    // 3. Populate Categories
+    // 3. Populate Unified Categories
     const mainCategories = [
       {
-        name: "Tech & Innovation",
+        name: "Tech & Learning Hub",
         slug: "tech",
         order: 1,
-        subs: ["AI & DeepTech", "Gadgets Now", "Software & Dev", "Cloud & DevOps", "Startups"],
+        subs: ["AI & DeepTech", "FullStack Dev", "Coding Masterclass", "Gadgets Now", "Cloud & DevOps", "Startups"],
       },
       {
-        name: "Travel Guide",
-        slug: "travel",
-        order: 2,
-        subs: ["Asia Expeditions", "Europe Escapes", "Budget Backpacking", "Visa & Flight Hacks", "Itineraries"],
-      },
-      {
-        name: "Learning Portal",
-        slug: "learning",
-        order: 3,
-        subs: ["Coding Masterclass", "FullStack Next.js & React", "AI Engineering & Agents", "Financial Literacy", "Career Growth"],
-      },
-      {
-        name: "Personal Blog",
+        name: "Personal Blog & Essays",
         slug: "personal-blog",
-        order: 4,
+        order: 2,
         subs: ["Life Reflections", "Deep Work & Habits", "Book Summaries", "Tech Experiments"],
       },
       {
-        name: "Business",
+        name: "Travel Diaries",
+        slug: "travel",
+        order: 3,
+        subs: ["Asia Expeditions", "Europe Escapes", "Budget Backpacking", "Visa & Flight Hacks", "Curated Itineraries"],
+      },
+      {
+        name: "Health & Wellness",
+        slug: "health",
+        order: 4,
+        subs: ["Fitness & Workouts", "Nutrition & Diet", "Mental Health", "Longevity Habits", "Preventive Care"],
+      },
+      {
+        name: "Business & Markets",
         slug: "business",
         order: 5,
         subs: ["Markets Pulse", "Global Economy", "Venture Capital", "Real Estate"],
       },
       {
-        name: "Videos",
-        slug: "videos",
+        name: "Sports & Outdoors",
+        slug: "sports",
         order: 6,
+        subs: ["Cricket & IPL", "Football / UCL", "Formula 1", "Tennis Grand Slams"],
+      },
+      {
+        name: "Videos & Documentaries",
+        slug: "videos",
+        order: 7,
         subs: ["Documentaries", "Tech Teardowns", "Travel Vlogs"],
       },
       {
-        name: "City",
-        slug: "city",
-        order: 7,
-        subs: ["Delhi NCR", "Mumbai", "Bengaluru", "Hyderabad"],
-      },
-      {
-        name: "India",
-        slug: "india",
+        name: "Learning Portal",
+        slug: "learning",
         order: 8,
-        subs: ["Governance & Law", "Economic Reform", "Science & Space"],
-      },
-      {
-        name: "World",
-        slug: "world",
-        order: 9,
-        subs: ["Americas", "Europe & UK", "Asia-Pacific"],
-      },
-      {
-        name: "Cricket",
-        slug: "cricket",
-        order: 10,
-        subs: ["IPL Coverage", "Test Cricket", "Stats & Commentary"],
-      },
-      {
-        name: "Sports",
-        slug: "sports",
-        order: 11,
-        subs: ["Football / UCL", "Formula 1", "Tennis"],
-      },
-      {
-        name: "Entertainment",
-        slug: "entertainment",
-        order: 12,
-        subs: ["Film Reviews", "OTT & Web Series", "Music & Culture"],
-      },
-      {
-        name: "Auto",
-        slug: "auto",
-        order: 13,
-        subs: ["Electric Vehicles (EV)", "Supercars", "Motorcycles"],
-      },
-      {
-        name: "EveryGyan Women",
-        slug: "women",
-        order: 14,
-        subs: ["Leadership & Enterprise", "Health & Wellbeing", "Women in STEM"],
-      },
-      {
-        name: "TV",
-        slug: "tv",
-        order: 15,
-        subs: ["Primetime Shows", "Special Reports"],
+        subs: ["Coding Masterclass", "FullStack Next.js & React", "AI Engineering & Agents", "Financial Literacy", "Career Growth"],
       },
     ];
 

@@ -3,11 +3,12 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Search, Menu, X, ChevronDown, Radio, Sparkles } from "lucide-react";
+import { Search, Menu, X, ChevronDown, Radio, Sparkles, Layers } from "lucide-react";
+import { TOP_NAV_ITEMS, UNIFIED_PILLARS } from "@/lib/constants/navigation";
 import { CategoryItem } from "@/types";
 
 interface NavbarProps {
-  categories: CategoryItem[];
+  categories?: CategoryItem[];
 }
 
 export default function Navbar({ categories }: NavbarProps) {
@@ -17,32 +18,38 @@ export default function Navbar({ categories }: NavbarProps) {
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
-  // All category tabs matching the EveryGyan screenshot & user specifications
-  const navTabs = [
-    { label: "EveryGyan +", href: "/feed/plus", isSpecial: true },
-    { label: "Videos", href: "/category/videos", catSlug: "videos" },
-    { label: "City", href: "/category/city", catSlug: "city" },
-    { label: "India", href: "/category/india", catSlug: "india" },
-    { label: "World", href: "/category/world", catSlug: "world" },
-    { label: "Business", href: "/category/business", catSlug: "business" },
-    { label: "Tech", href: "/category/tech", catSlug: "tech" },
-    { label: "Travel Guide", href: "/category/travel", catSlug: "travel" },
-    { label: "Learning Portal", href: "/category/learning", catSlug: "learning" },
-    { label: "Personal Blog", href: "/category/personal-blog", catSlug: "personal-blog" },
-    { label: "Gadgets Now", href: "/category/tech/gadgets-now" },
-    { label: "Cricket", href: "/category/cricket", catSlug: "cricket" },
-    { label: "Sports", href: "/category/sports", catSlug: "sports" },
-    { label: "Entertainment", href: "/category/entertainment", catSlug: "entertainment" },
-    { label: "Auto", href: "/category/auto", catSlug: "auto" },
-    { label: "EveryGyan Women", href: "/category/women", catSlug: "women" },
-    { label: "TV", href: "/category/tv", catSlug: "tv" },
-    { label: "Live", href: "/live", isLive: true },
-  ];
-
+  // Get subcategories from the unified navigation configuration (and fallback to DB categories if present)
   const getSubcategories = (catSlug?: string) => {
     if (!catSlug) return [];
-    const found = categories.find((c) => c.slug === catSlug);
-    return found?.subcategories || [];
+    
+    // First check unified navigation configuration
+    const pillar = UNIFIED_PILLARS.find((p) => p.slug === catSlug);
+    if (pillar && pillar.subcategories.length > 0) {
+      return pillar.subcategories;
+    }
+
+    // Check DB categories if passed
+    if (categories && categories.length > 0) {
+      const dbCat = categories.find((c) => c.slug === catSlug);
+      if (dbCat?.subcategories && dbCat.subcategories.length > 0) {
+        return dbCat.subcategories.map((s) => ({
+          name: s.name,
+          slug: s.slug,
+          href: `/category/${catSlug}/${s.slug}`,
+        }));
+      }
+    }
+
+    // Check if videos tab
+    if (catSlug === "videos") {
+      return [
+        { name: "Documentaries", slug: "documentaries", href: "/category/videos/documentaries" },
+        { name: "Tech Teardowns", slug: "tech-teardowns", href: "/category/videos/tech-teardowns" },
+        { name: "Travel Vlogs", slug: "travel-vlogs", href: "/category/videos/travel-vlogs" },
+      ];
+    }
+
+    return [];
   };
 
   const handleSearchSubmit = (e: React.FormEvent) => {
@@ -60,7 +67,7 @@ export default function Navbar({ categories }: NavbarProps) {
           
           {/* Main Navigation Horizontal Scroll List */}
           <div className="flex items-center space-x-0.5 sm:space-x-1.5 overflow-x-auto no-scrollbar py-2">
-            {navTabs.map((item, idx) => {
+            {TOP_NAV_ITEMS.map((item, idx) => {
               const subs = getSubcategories(item.catSlug);
               const hasDropdown = subs.length > 0;
 
@@ -99,7 +106,7 @@ export default function Navbar({ categories }: NavbarProps) {
                 >
                   <Link
                     href={item.href}
-                    className="whitespace-nowrap flex items-center gap-1 px-2.5 py-1 text-[#222222] hover:text-[#C7102E] transition rounded hover:bg-gray-50"
+                    className="whitespace-nowrap flex items-center gap-1 px-2.5 py-1 text-[#222222] hover:text-[#C7102E] transition rounded hover:bg-gray-50 font-semibold"
                   >
                     <span>{item.label}</span>
                     {hasDropdown && (
@@ -107,22 +114,37 @@ export default function Navbar({ categories }: NavbarProps) {
                     )}
                   </Link>
 
-                  {/* Dropdown Menu */}
+                  {/* Mega-menu / Dropdown Menu */}
                   {hasDropdown && activeDropdown === idx && (
-                    <div className="absolute left-0 top-full pt-1.5 w-60 shadow-2xl bg-white border border-[#E2E2E6] rounded-md py-2 z-50 animate-in fade-in duration-150">
-                      <div className="px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-[#888888] border-b border-[#F0F0F2] mb-1 flex items-center justify-between">
-                        <span>{item.label} Portals</span>
+                    <div className="absolute left-0 top-full pt-1.5 w-64 shadow-2xl bg-white border border-[#E2E2E6] rounded-md py-2 z-50 animate-in fade-in duration-150">
+                      <div className="px-3.5 py-1 text-[10px] font-bold uppercase tracking-wider text-[#888888] border-b border-[#F0F0F2] mb-1 flex items-center justify-between">
+                        <span>{item.label} Desks</span>
                         <Sparkles className="w-3 h-3 text-[#C7102E]" />
                       </div>
-                      {subs.map((sub) => (
+                      
+                      {subs.map((sub: any) => (
                         <Link
-                          key={sub.id}
-                          href={`/category/${item.catSlug}/${sub.slug}`}
-                          className="block px-3 py-1.5 text-xs text-[#333333] hover:bg-[#FFF5F6] hover:text-[#C7102E] transition font-normal"
+                          key={sub.slug}
+                          href={sub.href || `/category/${item.catSlug}/${sub.slug}`}
+                          className="block px-3.5 py-1.5 text-xs text-[#333333] hover:bg-[#FFF5F6] hover:text-[#C7102E] transition font-normal"
                         >
-                          {sub.name}
+                          <div className="font-semibold">{sub.name}</div>
+                          {sub.description && (
+                            <div className="text-[10px] text-gray-400 line-clamp-1">
+                              {sub.description}
+                            </div>
+                          )}
                         </Link>
                       ))}
+
+                      <div className="mt-1 pt-1 border-t border-[#F0F0F2] px-3.5 py-1">
+                        <Link
+                          href={item.href}
+                          className="text-[11px] font-bold text-[#C7102E] hover:underline block"
+                        >
+                          View all in {item.label} →
+                        </Link>
+                      </div>
                     </div>
                   )}
                 </div>
@@ -159,7 +181,7 @@ export default function Navbar({ categories }: NavbarProps) {
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search EveryGyan articles, travel guides, tech reviews, learning tutorials..."
+                placeholder="Search EveryGyan articles, tutorials, travel diaries, health dispatches..."
                 className="w-full text-xs pl-9 pr-3 py-2 border border-[#CCCCCC] rounded focus:outline-none focus:border-[#C7102E]"
                 autoFocus
               />
@@ -184,8 +206,12 @@ export default function Navbar({ categories }: NavbarProps) {
         {mobileMenuOpen && (
           <div className="fixed inset-x-0 top-[110px] bottom-0 bg-white z-40 overflow-y-auto p-6 border-t border-[#E2E2E6] shadow-2xl">
             <div className="max-w-[800px] mx-auto space-y-6">
+              
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E2E6]">
-                <h3 className="font-bold text-lg font-serif">All Sections & Portals</h3>
+                <div className="flex items-center gap-2">
+                  <Layers className="w-4 h-4 text-[#C7102E]" />
+                  <h3 className="font-bold text-lg font-serif">Knowledge Desks & Channels</h3>
+                </div>
                 <div className="flex items-center gap-2">
                   <Link
                     href="/profile"
@@ -204,23 +230,24 @@ export default function Navbar({ categories }: NavbarProps) {
                 </div>
               </div>
 
+              {/* Unified Knowledge Pillars in Mobile View */}
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-                {categories.map((cat) => (
-                  <div key={cat.id} className="space-y-2">
+                {UNIFIED_PILLARS.map((pillar) => (
+                  <div key={pillar.id} className="space-y-2">
                     <Link
-                      href={`/category/${cat.slug}`}
+                      href={pillar.href}
                       className="font-bold text-sm text-[#111111] hover:text-[#C7102E] block"
                       onClick={() => setMobileMenuOpen(false)}
                     >
-                      {cat.name}
+                      {pillar.name}
                     </Link>
-                    {cat.subcategories && cat.subcategories.length > 0 && (
+                    {pillar.subcategories && pillar.subcategories.length > 0 && (
                       <ul className="space-y-1.5 pl-2 border-l border-gray-200">
-                        {cat.subcategories.map((sub) => (
-                          <li key={sub.id}>
+                        {pillar.subcategories.map((sub) => (
+                          <li key={sub.slug}>
                             <Link
-                              href={`/category/${cat.slug}/${sub.slug}`}
-                              className="text-xs text-gray-600 hover:text-[#C7102E]"
+                              href={sub.href}
+                              className="text-xs text-gray-600 hover:text-[#C7102E] block"
                               onClick={() => setMobileMenuOpen(false)}
                             >
                               {sub.name}
@@ -232,6 +259,7 @@ export default function Navbar({ categories }: NavbarProps) {
                   </div>
                 ))}
               </div>
+
             </div>
           </div>
         )}
