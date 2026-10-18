@@ -186,13 +186,22 @@ export default function Navbar({ categories }: NavbarProps) {
             <div className="max-w-[800px] mx-auto space-y-6">
               <div className="flex items-center justify-between pb-3 border-b border-[#E2E2E6]">
                 <h3 className="font-bold text-lg font-serif">All Sections & Portals</h3>
-                <Link
-                  href="/admin"
-                  className="text-xs bg-gray-900 text-white px-3 py-1.5 rounded hover:bg-black font-semibold"
-                  onClick={() => setMobileMenuOpen(false)}
-                >
-                  Admin CMS Portal →
-                </Link>
+                <div className="flex items-center gap-2">
+                  <Link
+                    href="/profile"
+                    className="text-xs border border-gray-300 text-gray-700 px-2.5 py-1.5 rounded hover:bg-gray-100 font-semibold"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    My Profile
+                  </Link>
+                  <Link
+                    href="/admin"
+                    className="text-xs bg-gray-900 text-white px-3 py-1.5 rounded hover:bg-black font-semibold"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Admin CMS →
+                  </Link>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">

@@ -28,6 +28,7 @@ export default function AdminLoginPage() {
         throw new Error(data.error || "Login failed");
       }
 
+      window.dispatchEvent(new Event("auth-changed"));
       router.push("/admin");
       router.refresh();
     } catch (err: any) {

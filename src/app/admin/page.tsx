@@ -10,7 +10,7 @@ import DatabaseInitButton from "@/components/admin/DatabaseInitButton";
 export default async function AdminDashboardPage() {
   const session = await getAdminSession();
   if (!session) {
-    redirect("/admin/login");
+    redirect("/login?error=admin_required");
   }
 
   let posts: any[] = [];
@@ -37,7 +37,7 @@ export default async function AdminDashboardPage() {
             Editorial CMS Console
           </h1>
           <p className="text-xs text-gray-500 mt-0.5">
-            Signed in as <span className="font-semibold text-gray-700">{session.email}</span>
+            Signed in as <span className="font-semibold text-gray-700">{session.name} ({session.email})</span>
           </p>
         </div>
 

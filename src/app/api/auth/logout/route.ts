@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
-import { clearAdminSession } from "@/lib/auth";
+import { clearSession } from "@/lib/auth";
 
 export async function POST() {
-  await clearAdminSession();
-  return NextResponse.json({ success: true });
+  await clearSession();
+  return NextResponse.json({ success: true, message: "Logged out successfully" });
 }

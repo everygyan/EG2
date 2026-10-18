@@ -37,9 +37,9 @@ export default function Footer() {
               Admin & Publisher
             </h4>
             <ul className="space-y-2 text-[#AAAAAA]">
-              <li><Link href="/admin/login" className="hover:text-white transition font-semibold text-gray-300">Admin CMS Portal</Link></li>
-              <li><Link href="/admin/articles/new" className="hover:text-white transition">Publish New Article</Link></li>
-              <li><Link href="/admin/categories" className="hover:text-white transition">Category Manager</Link></li>
+              <li><Link href="/login" className="hover:text-white transition font-semibold text-gray-300">Reader Sign In / Register</Link></li>
+              <li><Link href="/profile" className="hover:text-white transition">Member Account Profile</Link></li>
+              <li><Link href="/admin" className="hover:text-white transition">Admin CMS Portal</Link></li>
               <li><Link href="/sitemap.xml" className="hover:text-white transition">XML Sitemap</Link></li>
             </ul>
           </div>
