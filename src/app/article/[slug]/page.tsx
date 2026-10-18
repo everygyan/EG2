@@ -1,13 +1,13 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
-import { format } from "date-fns";
 import { ArrowLeft, Clock, Tag, UserCircle, BookOpen } from "lucide-react";
 import prisma from "@/lib/prisma";
 import { fallbackHeroPost, fallbackLeftStories, fallbackSubHeroPost } from "@/lib/data";
 import RightSidebar from "@/components/magazine/RightSidebar";
 import ArticleInteractiveBar from "@/components/magazine/ArticleInteractiveBar";
 import { injectInArticleAds } from "@/lib/adInjector";
+import { formatArticleDate, formatReadingTime } from "@/lib/formatters";
 
 interface ArticlePageProps {
   params: Promise<{ slug: string }>;
@@ -124,7 +124,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
               </span>
               <div className="flex items-center gap-1.5 text-xs text-gray-500">
                 <Clock className="w-3.5 h-3.5" />
-                <span>{readTimeMinutes} min read</span>
+                <span>{formatReadingTime(readTimeMinutes)}</span>
               </div>
             </div>
 
@@ -146,9 +146,7 @@ export default async function ArticlePage({ params }: ArticlePageProps) {
                 </span>
                 <span className="mx-2">&bull;</span>
                 <span>
-                  {article.publishedAt
-                    ? format(new Date(article.publishedAt), "MMMM d, yyyy")
-                    : "October 15, 2026"}
+                  {formatArticleDate(article.publishedAt || "Oct 15, 2026")}
                 </span>
               </div>
 
