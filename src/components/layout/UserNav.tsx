@@ -184,7 +184,7 @@ export default function UserNav() {
               <span>View Profile</span>
             </Link>
 
-            {/* Admin Panel option - ONLY shown for Admin users */}
+            {/* Admin / Author Dashboard option - shown for Admin users */}
             {isAdmin && (
               <Link
                 href="/admin"
@@ -193,9 +193,9 @@ export default function UserNav() {
               >
                 <Shield className="w-4 h-4 text-[#C7102E]" />
                 <div className="flex flex-col">
-                  <span>Admin Panel</span>
+                  <span>Author Dashboard</span>
                   <span className="text-[10px] font-normal text-gray-500">
-                    CMS, Posts & Settings
+                    CMS, Posts &amp; Settings
                   </span>
                 </div>
               </Link>

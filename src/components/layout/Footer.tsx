@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Lock } from "lucide-react";
 import { UNIFIED_PILLARS, FOOTER_SPECIALS, FOOTER_USER_LINKS } from "@/lib/constants/navigation";
 
 export default function Footer() {
@@ -78,10 +79,18 @@ export default function Footer() {
         {/* Bottom Copyright */}
         <div className="pt-6 border-t border-[#222222] flex flex-col sm:flex-row items-center justify-between text-[#777777] gap-3">
           <p>© {new Date().getFullYear()} EveryGyan Media. All Rights Reserved.</p>
-          <div className="flex gap-4">
+          <div className="flex flex-wrap items-center gap-4">
             <Link href="/privacy" className="hover:text-gray-400">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-gray-400">Terms of Service</Link>
             <Link href="/contact" className="hover:text-gray-400">Contact Desk</Link>
+            <Link
+              href="/admin/login"
+              className="inline-flex items-center gap-1.5 text-gray-500 hover:text-white transition"
+              title="Author & Admin Dashboard"
+            >
+              <Lock className="w-3 h-3 text-[#C7102E]" />
+              <span>Author Dashboard</span>
+            </Link>
           </div>
         </div>
 
