@@ -1,8 +1,16 @@
 import Link from "next/link";
-import { Lock } from "lucide-react";
+import { Lock, Twitter, Instagram, Youtube, Linkedin, Facebook } from "lucide-react";
 import { UNIFIED_PILLARS, FOOTER_SPECIALS, FOOTER_USER_LINKS } from "@/lib/constants/navigation";
 
 export default function Footer() {
+  const footerSocials = [
+    { name: "X (Twitter)", href: "https://twitter.com/everygyan", icon: Twitter },
+    { name: "Instagram", href: "https://instagram.com/everygyan", icon: Instagram },
+    { name: "YouTube", href: "https://youtube.com/@everygyan", icon: Youtube },
+    { name: "LinkedIn", href: "https://linkedin.com/company/everygyan", icon: Linkedin },
+    { name: "Facebook", href: "https://facebook.com/everygyan", icon: Facebook },
+  ];
+
   return (
     <footer className="mt-16 bg-[#111111] text-white pt-12 pb-8 text-xs border-t-4 border-[#C7102E]">
       <div className="max-w-[1340px] mx-auto px-4 sm:px-6 space-y-10">
@@ -48,7 +56,7 @@ export default function Footer() {
           {/* Column 3: Member & Admin Services */}
           <div>
             <h4 className="text-[#C7102E] font-bold uppercase tracking-wider text-xs mb-3">
-              Account & Publishing
+              Account &amp; Publishing
             </h4>
             <ul className="space-y-2 text-[#AAAAAA]">
               {FOOTER_USER_LINKS.map((item) => (
@@ -69,6 +77,24 @@ export default function Footer() {
             <p className="text-[#AAAAAA] leading-relaxed mb-3">
               A high-impact publication dedicated to deep tech engineering, personal essays, global travel memoirs, and evidence-based wellness.
             </p>
+            <div className="flex items-center gap-2 mb-3">
+              {footerSocials.map((item) => {
+                const IconComponent = item.icon;
+                return (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={item.name}
+                    title={item.name}
+                    className="w-7 h-7 rounded-full bg-gray-800 text-gray-400 hover:text-white hover:bg-[#C7102E] flex items-center justify-center transition"
+                  >
+                    <IconComponent className="w-3.5 h-3.5" />
+                  </a>
+                );
+              })}
+            </div>
             <div className="text-[11px] text-[#777777]">
               Hosted with ⚡ LiteSpeed on Hostinger Business
             </div>
